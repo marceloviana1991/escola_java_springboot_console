@@ -11,14 +11,20 @@ public class Aluno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String nome;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "matriculas",
             joinColumns = @JoinColumn(name = "aluno_id"),
             inverseJoinColumns = @JoinColumn(name = "curso_id")
     )
     private List<Curso> cursos = new ArrayList<>();
+
+    public Aluno() {}
+    public Aluno(String nome) {
+        this.nome = nome;
+    }
 
     public Long getId() {
         return id;
@@ -48,8 +54,7 @@ public class Aluno {
     public String toString() {
         return "Aluno{" +
                 "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", cursos=" + cursos +
+                ", nome='" + nome +
                 '}';
     }
 }

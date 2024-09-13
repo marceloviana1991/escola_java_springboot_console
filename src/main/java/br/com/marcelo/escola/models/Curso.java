@@ -17,8 +17,15 @@ public class Curso {
     private LocalDate data;
     @Enumerated(EnumType.STRING)
     private TurnoCurso turnoCurso;
-    @ManyToMany(mappedBy = "cursos")
+    @ManyToMany(mappedBy = "cursos", fetch = FetchType.EAGER)
     private List<Aluno> alunos = new ArrayList<>();
+
+    public Curso(){}
+    public Curso(String nome, String data, TurnoCurso turnoCurso) {
+        this.nome = nome;
+        this.setData(data);
+        this.turnoCurso = turnoCurso;
+    }
 
     public Long getId() {
         return id;
@@ -59,11 +66,8 @@ public class Curso {
     }
 
     public void setData(String data) {
-        String[] dataArray = data.split("/");
-        int ano = Integer.parseInt(dataArray[0]);
-        int mes = Integer.parseInt(dataArray[1]);
-        int dia = Integer.parseInt(dataArray[2]);
-        this.data = LocalDate.of(ano, mes, dia);
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.data = LocalDate.from(formatador.parse(data));
     }
 
     @Override
@@ -71,6 +75,7 @@ public class Curso {
         return "Curso{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
+                ", data=" + data +
                 ", turnoCurso=" + turnoCurso +
                 ", alunos=" + alunos +
                 '}';
