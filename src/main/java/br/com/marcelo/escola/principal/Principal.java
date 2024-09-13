@@ -6,6 +6,8 @@ import br.com.marcelo.escola.models.TurnoCurso;
 import br.com.marcelo.escola.repository.AlunoRepository;
 import br.com.marcelo.escola.repository.CursoRepository;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -34,6 +36,7 @@ public class Principal {
                     3- Listar cursos
                     4- Listar alunos
                     5- Matricular aluno em curso
+                    6_ Listar cursos por data
                     
                     9 - Sair
                     """;
@@ -58,6 +61,9 @@ public class Principal {
                 case 5:
                     matricularAlunos();
                     break;
+                case 6:
+                    listarCursosPorData();
+                    break;
                 case 9:
                     System.out.println("Encerrando a aplicação!");
                     break;
@@ -65,6 +71,19 @@ public class Principal {
                     System.out.println("Opção inválida!");
             }
         }
+    }
+
+    private void listarCursosPorData() {
+        System.out.println("Informe a data inicial da pesquisa: ");
+        String dataInicial = leitura.nextLine();
+        System.out.println("Informe a data final da pesquisa: ");
+        String dataFinal = leitura.nextLine();
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataInicialConvertida = LocalDate.from(formatador.parse(dataInicial));
+        LocalDate dataFinalConvertida = LocalDate.from(formatador.parse(dataFinal));
+        List<Curso> cursos = cursoRepository.findByDataBetween(
+                dataInicialConvertida, dataFinalConvertida);
+        cursos.forEach(System.out::println);
     }
 
     private void matricularAlunos() {
